@@ -1,0 +1,6 @@
+{
+  "name": "audit-trail-chain",
+  "private": true,
+  "scripts": { "compile": "node compile.js" },
+  "dependencies": { "solc": "0.8.24" }
+}

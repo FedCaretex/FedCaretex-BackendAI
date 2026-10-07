@@ -1,53 +1,53 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import shap
-import json
-import numpy as np
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="SmartWealth AI Backend", description="FastAPI server for Diabetes Prediction, FL & SHAP")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-class PredictionRequest(BaseModel):
-    glucose: float
-    bmi: float
-    age: int
-    heart_rate: float
+from app.routers import audit, auth, dataset, fl, history, predict
+from app.services.fl_service import get_coordinator
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    # Bangun koordinator (load data, ledger, bootstrap FL) sebelum menerima request.
+    get_coordinator()
+    yield
+
+
+app = FastAPI(
+    title="SmartWealth Diabetes AI",
+    description=(
+        "Gateway Federated Learning (FedAvg/FedProx) + Differential Privacy + audit trail "
+        "blockchain + SHAP eksak untuk deteksi dini risiko Diabetes Mellitus Tipe 2."
+    ),
+    version="2.0.0",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth.router)
+app.include_router(predict.router)
+app.include_router(fl.router)
+app.include_router(audit.router)
+app.include_router(history.router)
+app.include_router(dataset.router)
+
 
 @app.get("/")
-def read_root():
-    return {"status": "ok", "message": "SmartWealth Backend API is running."}
-
-@app.post("/predict")
-def predict_risk(data: PredictionRequest):
-    # DUMMY LOGIC FOR MVP
-    # Dalam skenario nyata, load model TFLite global disini untuk SHAP explainer
-    
-    # Kalkulasi risk (Dummy)
-    risk_score = (data.glucose * 0.4) + (data.bmi * 0.3) + (data.age * 0.2)
-    category = "Tinggi" if risk_score > 100 else "Sedang" if risk_score > 70 else "Rendah"
-    
-    # DUMMY SHAP VALUES (Harusnya dihasilkan dari shap.Explainer)
-    shap_values = {
-        "glucose": 0.45,
-        "bmi": 0.35,
-        "age": 0.15,
-        "heart_rate": 0.05
-    }
-    
+def health():
+    c = get_coordinator()
     return {
-        "risk_score": risk_score,
-        "category": category,
-        "shap_values": shap_values,
-        "message": "Prediksi berhasil dilakukan dengan analitik SHAP."
-    }
-
-@app.post("/fl/submit-update")
-def submit_fl_update(client_id: str, round_id: str):
-    # Endpoint simulasi client mengupload bobot lokal
-    # Di integrasikan dengan Blockchain untuk Audit Trail
-    tx_hash = "0x" + "a" * 64 # Simulasi TX Hash Smart Contract
-    return {
-        "status": "success",
-        "round_id": round_id,
-        "blockchain_tx_hash": tx_hash,
-        "message": "Model weights submitted and hashed to blockchain."
+        "status": "ok",
+        "service": "diabetes-risk-ai",
+        "round_id": c.round,
+        "ledger": c.ledger.kind,
+        "data_source": c.data_source,
+        "docs": "/docs",
     }
