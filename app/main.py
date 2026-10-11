@@ -15,7 +15,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="SmartWealth Diabetes AI",
+    title="FedCaretex Diabetes AI",
     description=(
         "Gateway Federated Learning (FedAvg/FedProx) + Differential Privacy + audit trail "
         "blockchain + SHAP eksak untuk deteksi dini risiko Diabetes Mellitus Tipe 2."

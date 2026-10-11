@@ -1,1 +1,1 @@
-# FedCaretex / SmartWealth AI backend
+# FedCaretex / FedCaretex AI backend

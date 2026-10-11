@@ -37,7 +37,7 @@ class HistoryModel(Base):
 
 
 class SqliteStore:
-    def __init__(self, db_url="sqlite:///data/smartwealth.db"):
+    def __init__(self, db_url="sqlite:///data/fedcaretex.db"):
         self.engine = create_engine(db_url, connect_args={"check_same_thread": False})
         Base.metadata.create_all(bind=self.engine)
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
@@ -45,12 +45,12 @@ class SqliteStore:
 
     def _seed_demo_user(self) -> None:
         with self.SessionLocal() as db:
-            user = db.query(UserModel).filter(UserModel.email == "demo@smartwealth.ai").first()
+            user = db.query(UserModel).filter(UserModel.email == "demo@fedcaretex.ai").first()
             if not user:
                 demo_user = UserModel(
                     user_id="demo-user",
                     name="Rownok",
-                    email="demo@smartwealth.ai",
+                    email="demo@fedcaretex.ai",
                     password="demo123",
                 )
                 db.add(demo_user)

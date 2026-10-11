@@ -1,4 +1,4 @@
-# SmartWealth Diabetes AI — Backend (FL Gateway + Blockchain + SHAP)
+# FedCaretex Diabetes AI — Backend (FL Gateway + Blockchain + SHAP)
 
 Backend skripsi **"Mobile Health berbasis Federated Learning, Differential Privacy, audit trail
 Blockchain, dan explainability SHAP untuk deteksi dini risiko Diabetes Mellitus Tipe 2"**.
@@ -54,7 +54,7 @@ Satu ronde FL lewat HTTP:
 ## 2. Struktur folder
 
 ```
-smartwealth_backendAI/
+FedCaretex-BackendAI/
 ├── app/                      # Gateway HTTP (FastAPI)
 │   ├── main.py               # entry point; koordinator FL dibangun saat startup
 │   ├── config.py             # semua konfigurasi via environment variable
@@ -90,7 +90,7 @@ smartwealth_backendAI/
 Butuh Python 3.11+ (sudah diuji di 3.13). Node.js hanya diperlukan jika ingin mengompilasi ulang kontrak.
 
 ```bash
-cd smartwealth_backendAI
+cd FedCaretex-BackendAI
 python -m venv .venv
 .venv\Scripts\activate          # Windows  (Linux/macOS: source .venv/bin/activate)
 pip install -r requirements.txt
@@ -268,7 +268,7 @@ Implementasi referensinya ada di [`flsys/client.py`](flsys/client.py).
 
 ## 9. Belum dikerjakan
 
-- Port Dart (model, DP, serialisasi, Ed25519, SHAP) di `smartwealth_mobile`, diuji terhadap `golden_hash.json`
+- Port Dart (model, DP, serialisasi, Ed25519, SHAP) di `FedCaretex-Mobile`, diuji terhadap `golden_hash.json`
 - Persistensi model global + ledger (saat ini in-memory)
 - Autentikasi token pada endpoint FL, rate limiting
 - Agregasi robust (trimmed mean / median) dan deteksi anomali update
